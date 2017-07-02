@@ -35,4 +35,37 @@ public class SpringJdbcTest {
         assertThat(result.getEmail(), is("carami@nate.com"));
         assertThat(result.getPasswd(), is("1234"));
     }
+
+
+    @Test
+    public void shouldDelete() {
+        // given
+        Member member = new Member("강경미", "carami@nate.com", "1234");
+        Long memberPk = memberDao.insert(member);
+
+        // when
+        int deleteCount = memberDao.delete(memberPk);
+
+        // then
+        assertThat(deleteCount, is(1));
+    }
+
+    @Test
+    public void shouldUpdate() {
+
+        // given
+        Member member = new Member("강경미", "carami@nate.com", "1234");
+        Long memberPk = memberDao.insert(member);
+
+        // when
+        member.setId(memberPk);
+        member.setName("강경미2");
+        member.setEmail("carami2@nate.com");
+        int updateCount = memberDao.update(member);
+
+        // Then
+        Member result = memberDao.selectById(memberPk);
+        assertThat(result.getName(), is("강경미2"));
+        assertThat(result.getEmail(), is("carami2@nate.com"));
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,5 +37,15 @@ public class MemberDao {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
         return jdbc.queryForObject(MemberSqls.SELECT_BY_ID,params,rowMapper);
+    }
+
+    public int update(Member member){
+        SqlParameterSource params = new BeanPropertySqlParameterSource(member);
+        return jdbc.update(MemberSqls.UPDATE_BY_ID, params);
+    }
+
+    public int delete(Long id){
+        Map<String, ?> params = Collections.singletonMap("id", id);
+        return jdbc.update(MemberSqls.DELETE_BY_ID, params);
     }
 }
