@@ -4,7 +4,6 @@ import carami.todo.config.DbConfig;
 import carami.todo.config.RootApplicationContextConfig;
 import carami.todo.dao.MemberDao;
 import carami.todo.domain.Member;
-import com.sun.tools.javac.comp.Todo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
