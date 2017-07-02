@@ -39,6 +39,13 @@ public class MemberDao {
         return jdbc.queryForObject(MemberSqls.SELECT_BY_ID,params,rowMapper);
     }
 
+    public Member selectByEmail(String email){
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+        return jdbc.queryForObject(MemberSqls.SELECT_BY_Email,params,rowMapper);
+    }
+
+
     public int update(Member member){
         SqlParameterSource params = new BeanPropertySqlParameterSource(member);
         return jdbc.update(MemberSqls.UPDATE_BY_ID, params);
