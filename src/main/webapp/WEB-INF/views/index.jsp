@@ -10,7 +10,7 @@
 <hr>
 
 <img src="/resources/image.png"/>
-<br><br
+<br><br>
 
 로그인 폼<br>
 <c:if test="${sessionScope.loginInfo == null}">
