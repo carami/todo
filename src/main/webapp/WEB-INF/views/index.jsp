@@ -9,8 +9,13 @@
 <h1>main page</h1>
 <hr>
 
+<img src="/resources/image.png"/>
+<br><br
+
 로그인 폼<br>
 <c:if test="${sessionScope.loginInfo == null}">
+
+
 
 <form method="post" action="/members/login">
     email : <input type="text" name="email"><br>
