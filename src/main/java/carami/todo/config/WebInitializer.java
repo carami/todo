@@ -15,12 +15,7 @@ public class WebInitializer implements WebApplicationInitializer {
     private static final String CONFIG_LOCATION = "carami.todo.config";
     private static final String MAPPING_URL = "/";
     
-    public WebInitializer(){
-    	System.out.println("------------------------------");
-    	System.out.println("--------WebInitializer--------");
-    	System.out.println("------------------------------");
-    }
-     
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
 

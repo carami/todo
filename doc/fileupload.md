@@ -1,5 +1,59 @@
-package carami.todo.controller;
+## file upload
 
+1. pom.xml에 필요한 dependency 추가
+
+```
+<!-- file upload -->
+       <dependency>
+           <groupId>commons-fileupload</groupId>
+           <artifactId>commons-fileupload</artifactId>
+           <version>1.2.1</version>
+       </dependency>
+       <dependency>
+           <groupId>commons-io</groupId>
+           <artifactId>commons-io</artifactId>
+           <version>1.4</version>
+       </dependency>
+```
+
+2. ServletContextConfig.java 에 파일업로드를 위한 빈추가
+```
+import org.springframework.web.multipart.MultipartResolver;
+
+@Bean
+   public MultipartResolver multipartResolver() {
+       org.springframework.web.multipart.commons.CommonsMultipartResolver multipartResolver = new org.springframework.web.multipart.commons.CommonsMultipartResolver();
+       multipartResolver.setMaxUploadSize(10485760); // 1024 * 1024 * 10
+       return multipartResolver;
+   }
+```
+
+3. WebInitializer.java 에 설정추가
+
+```
+@Override
+   public void onStartup(ServletContext servletContext) throws ServletException {
+
+       // Encoding Filter 설정, post로 값을 넘길때 깨지지 않도록
+       EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
+
+       CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+       characterEncodingFilter.setEncoding("UTF-8");
+       characterEncodingFilter.setForceEncoding(true);
+
+       FilterRegistration.Dynamic characterEncoding = servletContext.addFilter("characterEncoding", characterEncodingFilter);
+       characterEncoding.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
+
+       // dispatcherServlet 설정
+       WebApplicationContext context = getContext();
+       servletContext.addListener(new ContextLoaderListener(context));
+       ServletRegistration.Dynamic dispatcher = servletContext.addServlet("DispatcherServlet", new DispatcherServlet(context));
+       dispatcher.setLoadOnStartup(1);
+       dispatcher.addMapping(MAPPING_URL);
+   }
+```
+4. FileController.java 추가
+```
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -89,10 +143,10 @@ public class FilesController {
             HttpServletResponse response
     ){
         // id를 이용하여 파일의 정보를 읽어온다.
-        String originalFilename = "aaa.jpg";
+        String originalFilename = "원본파일명";
         String contentType = "image/jpeg";
-        int fileSize = 6331;
-        String saveFileName = "c:/temp/2017/07/13/91819a40-d1d6-49de-ab94-398e84bbd235";
+        int fileSize = 271621;
+        String saveFileName = "c:/temp/2017/07/12/61405ccf-5147-493a-9b9a-ef0375e40dfd";
 
         response.setHeader("Content-Disposition", "attachment; filename=\"" + originalFilename + "\";");
         response.setHeader("Content-Transfer-Encoding", "binary");
@@ -124,3 +178,24 @@ public class FilesController {
     }
 
 }
+```
+
+5. files.jsp
+
+```
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>file등록 폼</title>
+</head>
+<body>
+<form method="post" action="/files" enctype="multipart/form-data">
+    title : <input type="text" name="title"><br>
+    <input type="file" name="file"><br>
+    <input type="file" name="file"><br>
+    <input type="submit" value="등록">
+</form>
+</body>
+</html>
+
+```
