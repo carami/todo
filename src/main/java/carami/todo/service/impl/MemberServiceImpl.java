@@ -20,7 +20,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
- //   @Transactional(readOnly = false)
+    @Transactional(readOnly = false)
     public Member addMember(Member member){
         Long insert = memberDao.insert(member);
         member.setId(insert);
@@ -28,11 +28,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public int delete(Long id) {
         return memberDao.delete(id);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public int update(Member member) {
         return memberDao.update(member);
     }
