@@ -38,21 +38,22 @@ https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=CLIENT_ID&
 
 - callBack으로 넘어온 정보를 출력하면 다음과 같다. 제대로 넘어왔는지 확인하기 위하여 Session에 저장해둔 state값과 파라미터로 넘어온 State값을 비교한다.
 - code값은 네아로 인증에 성공하면 반환받는 인증 코드, 접근 토큰(access token) 발급에 사용됩니다.
+```
+Header Values ----------------------------------
+host : localhost:8080
+connection : keep-alive
+cache-control : max-age=0
+upgrade-insecure-requests : 1
+user-agent : Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+accept : text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+accept-encoding : gzip, deflate, br
+accept-language : ko,en-US;q=0.8,en;q=0.6
+cookie : Idea-6296546d=26b39535-a7fb-4ddc-8989-f3f7b4b66bb9; SCOUTER=xs2ri0r5003jj; JSESSIONID=8B1C39C006177C355F532784D661C3E5
 
->Header Values ----------------------------------
->host : localhost:8080
->connection : keep-alive
->cache-control : max-age=0
->upgrade-insecure-requests : 1
->user-agent : Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 >Safari/537.36
->accept : text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
->accept-encoding : gzip, deflate, br
->accept-language : ko,en-US;q=0.8,en;q=0.6
->cookie : Idea-6296546d=26b39535-a7fb-4ddc-8989-f3f7b4b66bb9; SCOUTER=xs2ri0r5003jj; >JSESSIONID=8B1C39C006177C355F532784D661C3E5
->request Values ----------------------------------
->code : v2p7b2jcu30CmeJ1
->state : 916882313730767219999586828602446552295
-
+request Values ----------------------------------
+code : v2p7b2jcu30CmeJ1
+state : 916882313730767219999586828602446552295
+```
 
 
 
