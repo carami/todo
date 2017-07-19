@@ -622,3 +622,94 @@ public class HelloController {
 
 
 ```
+
+6. 네이버에서 회원정보를 잘 가지고 왔을 경우 session에 회원정보를 저장한다.
+
+naverCallback 메소드의 끝부분에 네이버로부터 회원정보를 잘 읽어왔다면(null이 아닐 경우) 해당 정보를 session에 저장한다.
+
+```
+    @GetMapping(path = "/naver_callback")
+    public String naverCallback(
+            @RequestParam(name = "code")String code, @RequestParam(name = "state")String state,
+            HttpServletRequest request){
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//        System.out.println("Header Values ----------------------------------");
+//        while(headerNames.hasMoreElements()){
+//            String headerName = headerNames.nextElement();
+//            String hedaerValue = request.getHeader(headerName);
+//            System.out.println(headerName + " : " + hedaerValue);
+//        }
+//
+//        System.out.println("request Values ----------------------------------");
+//        Enumeration<String> parameterNames = request.getParameterNames();
+//        while(parameterNames.hasMoreElements()){
+//            String parameterName = parameterNames.nextElement();
+//            String parameterValue = request.getParameter(parameterName);
+//            System.out.println(parameterName + " : " + parameterValue);
+//        }
+
+        HttpSession session = request.getSession();
+        String sessionState = (String)session.getAttribute("state"); // 세션에 저장된 state값 읽어오기
+        if(!state.equals(sessionState)){ // clientId 혹은  state값이 올바르지 않을 경우
+            throw new RuntimeException("잘못된 callback 입니다.");
+        }
+
+        Map<String, String> tokenMap = getToken(code, state);
+        String accessToken = tokenMap.get("access_token");
+        NaverLoginUser naverLoginUser = getNaverLoginUser(accessToken);
+        System.out.println(naverLoginUser);
+
+        if(naverLoginUser != null){
+            session.setAttribute("loginUser",naverLoginUser);
+        }
+
+        return "hello";
+    }
+```
+
+hello.jsp를 다음과 같이 수정한다. loginUser세션값이 있으면 네이버 회원정보를 보여주고, 없으면 로그인 버튼이 보여지도록 수정한다.
+```
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<html>
+<head>
+    <title>hello</title>
+</head>
+<body>
+<h1>Hello World</h1>
+
+
+<c:if test="${loginUser eq null}">
+    <a href="${naverLoginUrl}"><img height="50" src="http://static.nid.naver.com/oauth/small_g_in.PNG"/></a>
+</c:if>
+<c:if test="${loginUser ne null}">
+    email : ${loginUser.email}<br>
+    별명 : ${loginUser.nickname}<br>
+    <img src="${loginUser.profileImage}">이름 : ${loginUser.name}<br>
+    <a href="/logout">로그아웃</a>
+</c:if>
+
+</body>
+</html>
+
+```
+
+7. 로그아웃하기
+ 
+ HelloController에 다음을 추가한다.
+ 
+ ``` 
+    @GetMapping(path = "/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.removeAttribute("loginUser");
+        return "redirect:/";
+    }
+
+```
+        
+        
+8. 네이버로부터 읽어온 정보를 db에 저장하려면 어떻게 해야할까?       
+        
+        

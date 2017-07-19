@@ -40,6 +40,14 @@ public class HelloController {
         return "hello";
     }
 
+    @GetMapping(path = "/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.removeAttribute("loginUser");
+        return "redirect:/";
+    }
+
+
     @GetMapping(path = "/naver_callback")
     public String naverCallback(
             @RequestParam(name = "code")String code, @RequestParam(name = "state")String state,
@@ -70,6 +78,10 @@ public class HelloController {
         String accessToken = tokenMap.get("access_token");
         NaverLoginUser naverLoginUser = getNaverLoginUser(accessToken);
         System.out.println(naverLoginUser);
+
+        if(naverLoginUser != null){
+            session.setAttribute("loginUser",naverLoginUser);
+        }
 
         return "hello";
     }
