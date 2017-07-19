@@ -210,6 +210,77 @@ public class HelloController {
 }
 
 ```
+getNaverLoginUrl() 메소드는 redirectUrl을 전달받아서 naver login을 위한 url 문자열을 만든다. 그리고 session에 state값을 random하게 만들어 저장한다.
+추후에 redirect_url에 파라미터로 넘어온 값과 비교하여 해당 url이 올바른지 검증하는 목적으로 사용된다.
+
+/naver_callback 은 네이버에서 앱을 등록할 때 입력한 URL이다. 여기에서는 redirect되었을 때 네이버에서 어떤 값을 넘기는지 확인하는 용도로 사용해보았다.
+code, state 값이 파라미터로 넘어오는 것을 알 수 있다. 2가지 값을 callback_url에서 확인해야한다.
+
+5. 네이버 로그인 2단계. callback이 올바른지 확인하고 사용자 정보 읽어오기.
+
+- 네이버에서 회원정보를 읽어오려면, 인증 후에 token을 발급받아야 합니다. URL객체나 RestTemplate을 이용
+- 네이버로부터 Token을 받은 후에, 해당 Token을 이용하여 네이버 사용자 정보 api를 읽어와야 합니다.
+
+5-1. RestTemplate등록하기
+
+RootApplicationContextConfig 에 RestTemplate 객체를 등록합니다. RestTemplate객체는 rest api를 호출한 후, 그 결과값을 객체로 자동변환하는 기능을 가지고 있습니다.
+보통 rest api는 json, xml 등의 결과를 반환합니다.혹은 byte배열이 전달 될 수도 있습니다. 이러한 다양한 결과를 변환하는 Converter를 설정하게 되어 있습니다.
+그리고 실제로 브라우저처럼 api를 호출해야하는데요. 여기에서는 기본으로 제공하는 SimpleClinetHttpRequestFactory를 이용하고 있습니다.
+```
+package carami.todo.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+@Configuration
+@ComponentScan(basePackages = {
+        "carami.todo.dao",
+        "carami.todo.service"
+})
+@Import({DbConfig.class})
+public class RootApplicationContextConfig {
+    @Bean("restTemplate")
+    public RestTemplate mailRestTemplate() {
+
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON));
+
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+        messageConverters.add(new ByteArrayHttpMessageConverter());
+        messageConverters.add(new StringHttpMessageConverter());
+        messageConverters.add(new ResourceHttpMessageConverter());
+        messageConverters.add(new AllEncompassingFormHttpMessageConverter());
+        messageConverters.add(mappingJackson2HttpMessageConverter);
+
+        SimpleClientHttpRequestFactory simpleClientHttpRequestFactory = new SimpleClientHttpRequestFactory();
+        simpleClientHttpRequestFactory.setConnectTimeout(3000);
+        simpleClientHttpRequestFactory.setReadTimeout(15000);
+        simpleClientHttpRequestFactory.setBufferRequestBody(false);
+
+
+        RestTemplate restTemplate = new RestTemplate(simpleClientHttpRequestFactory);
+        restTemplate.setMessageConverters(messageConverters);
+        return restTemplate;
+    }
+}
+
+```
+
 
 5-2. HelloController 수정하기
 
