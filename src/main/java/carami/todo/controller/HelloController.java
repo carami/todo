@@ -27,7 +27,7 @@ import java.util.Map;
 @Controller
 public class HelloController {
     @Autowired
-    @Qualifier("restTemplate")
+//    @Qualifier("restTemplate")
     RestTemplate restTemplate;
 
     String clientId = "ZLP834mSIldLNVIRkjnA";//애플리케이션 클라이언트 아이디값";
@@ -125,7 +125,7 @@ public class HelloController {
     }
 
     private Map<String, String> getToken(String code, String state){
-        String clientSecret = "skdxMSMuII";//애플리케이션 클라이언트 시크릿값";
+        String clientSecret = "1dsQJuSFxk";//애플리케이션 클라이언트 시크릿값";
 
         String redirectURI = null;
         try {
