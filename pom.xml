@@ -206,6 +206,8 @@
                     <url>http://211.249.62.123//manager/html</url>
                     <server>TomcatServer</server>
                     <path>/</path>
+                    <username>admin</username>
+                    <password>Admin1234#0</password>
                 </configuration>
             </plugin>
 		</plugins>
