@@ -2,6 +2,7 @@ package carami.todo.controller;
 
 import carami.todo.dto.NaverLoginUser;
 import carami.todo.dto.NaverLoginUserResult;
+import carami.todo.security.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -33,7 +34,10 @@ public class HelloController {
     String clientId = "ZLP834mSIldLNVIRkjnA";//애플리케이션 클라이언트 아이디값";
 
     @GetMapping(path = "/")
-    public String hello(HttpServletRequest request){
+    public String hello(@AuthUser NaverLoginUser naverLoginUser, HttpServletRequest request){
+        System.out.println("----------------------------------------------------------");
+        System.out.println("ArgumentResolver에서 넘긴 이름 : " + naverLoginUser.getName());
+        System.out.println("----------------------------------------------------------");
         String callbackUrl = "http://localhost:8080/naver_callback";
         String naverLoginUrl = getNaverLoginUrl(callbackUrl, request.getSession());
         request.setAttribute("naverLoginUrl", naverLoginUrl);
