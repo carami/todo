@@ -51,6 +51,11 @@ public class HelloController {
         return "redirect:/";
     }
 
+    @GetMapping(path = "/loginpage")
+    public String loginpage(){
+        return "loginpage";
+    }
+
 
     @GetMapping(path = "/naver_callback")
     public String naverCallback(
