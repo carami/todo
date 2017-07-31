@@ -36,4 +36,9 @@ public class MemberServiceImpl implements MemberService {
     public int update(Member member) {
         return memberDao.update(member);
     }
+
+    @Override
+    public Member getByEmail(String email) {
+        return memberDao.selectByEmail(email);
+    }
 }

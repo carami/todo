@@ -7,4 +7,5 @@ public interface MemberService {
     public Member addMember(Member member);
     public int delete(Long id);
     public int update(Member member);
+    public Member getByEmail(String email);
 }
