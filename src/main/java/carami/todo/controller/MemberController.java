@@ -22,10 +22,15 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    @GetMapping
+    public String members(){
+        return "index";
+    }
+
 
     // 회원 가입시 form에서 알맞은 값을 입력하였는지 프론트 javascript를 이용하여 검증을 해야겠지만,
     // 프론트를 무시하고 요청을 보낼 수도 있기 때문에 서버에서도 해당 값이 올바른지 검증하는 코드가 반드시 존재해야 한다.
-    @PostMapping(produces = "text/html")
+    @PostMapping
     public String create(@ModelAttribute MemberFormParam memberFormParam) {
         if (memberFormParam.getName() == null || memberFormParam.getName().length() == 0 ||
                 memberFormParam.getEmail() == null || memberFormParam.getEmail().length() == 0 ||
