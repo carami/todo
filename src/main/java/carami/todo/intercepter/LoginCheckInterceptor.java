@@ -1,6 +1,7 @@
 package carami.todo.intercepter;
 
 import carami.todo.dto.NaverLoginUser;
+import carami.todo.security.SecurityContext;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,11 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
         HttpSession session = request.getSession();
         NaverLoginUser naverLoginUser = (NaverLoginUser)session.getAttribute("loginUser");
         String path = request.getRequestURI();
+
+        // login정보가 있을 경우 SEcurityContext에 값을 할당한다.
+        if(naverLoginUser != null) {
+            SecurityContext.loginUser.set(naverLoginUser);
+        }
 
         System.out.println("path : " + path);
 

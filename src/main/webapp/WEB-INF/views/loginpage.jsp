@@ -5,5 +5,9 @@
 </head>
 <body>
 <h1> LoginPage 입니다. 로그인하면 볼 수 있습니다.</h1>
+
+<br><br><br>
+
+${naverLoginuser.email}<br>
 </body>
 </html>

@@ -27,12 +27,12 @@ public class AuthUserWebArgumentResolver implements HandlerMethodArgumentResolve
         AuthUser loginUser = parameter.getParameterAnnotation( AuthUser.class );
 
         if( loginUser == null ) {
+            // 어노테이션이 없을 경우에는 값 할당을 null로 바꾼다. SecurityContext로부터 값을 읽어들일 수 없도록 한다.
+            SecurityContext.loginUser.set(null);
             return WebArgumentResolver.UNRESOLVED;
         }
 
-        NaverLoginUser naverLoginUser = new NaverLoginUser();
-        naverLoginUser.setName("resolveArgument에서 넣어준 이름");
-
-        return naverLoginUser;
+        // 인터셉터에서 설정한 NaverLoginUser객체를 반환한다.
+        return SecurityContext.loginUser.get();
     }
 }

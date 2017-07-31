@@ -35,9 +35,11 @@ public class HelloController {
 
     @GetMapping(path = "/")
     public String hello(@AuthUser NaverLoginUser naverLoginUser, HttpServletRequest request){
-        System.out.println("----------------------------------------------------------");
-        System.out.println("ArgumentResolver에서 넘긴 이름 : " + naverLoginUser.getName());
-        System.out.println("----------------------------------------------------------");
+        if(naverLoginUser != null) {
+            System.out.println("----------------------------------------------------------");
+            System.out.println("ArgumentResolver에서 넘긴 이름 : " + naverLoginUser.getName());
+            System.out.println("----------------------------------------------------------");
+        }
         String callbackUrl = "http://localhost:8080/naver_callback";
         String naverLoginUrl = getNaverLoginUrl(callbackUrl, request.getSession());
         request.setAttribute("naverLoginUrl", naverLoginUrl);
@@ -52,7 +54,11 @@ public class HelloController {
     }
 
     @GetMapping(path = "/loginpage")
-    public String loginpage(){
+    public String loginpage(@AuthUser NaverLoginUser naverLoginUser, HttpServletRequest request){
+        System.out.println("로그인 정보 -----------------------------");
+        System.out.println(naverLoginUser);
+        request.setAttribute("naverLoginuser", naverLoginUser);// jsp에게 값을 넘기려면 request를 통하여 넘긴다.
+        System.out.println("로그인 정보 -----------------------------");
         return "loginpage";
     }
 
@@ -92,7 +98,7 @@ public class HelloController {
             session.setAttribute("loginUser",naverLoginUser);
         }
 
-        return "hello";
+        return "redirect:/";
     }
 
 
